@@ -1,0 +1,47 @@
+// Antes de gerar a aba de impressão, exclui todas as linhas em branco, da aba "Dados" (levando em consideração a coluna A)
+
+function deleteRows() {
+  var sheet = SpreadsheetApp.getActiveSheet();
+  var rows = sheet.getDataRange();
+  var numRows = rows.getNumRows();
+  var values = rows.getValues();
+
+  var rowsDeleted = 0;
+  for (var i = 0; i <= numRows - 1; i++) {
+    var row = values[i];
+    if (row[0] == 'delete' || row[0] == '') { // This searches all cells in columns A (change to row[1] for columns B and so on) and deletes row if cell is empty or has value 'delete'.
+      sheet.deleteRow((parseInt(i)+1) - rowsDeleted);
+      rowsDeleted++;
+    }
+  }
+};
+
+// Mapeia os dados "já limpos" (sem linhas em branco) presentes na aba "Dados" para serem corretamente impressos
+
+let app=SpreadsheetApp;
+let spreadsheet=app.getActiveSpreadsheet();
+let sheetImpressao=spreadsheet.getSheetByName("Impressao");
+let sheetTemplate=spreadsheet.getSheetByName("Template");
+let sheetDados=spreadsheet.getSheetByName("Dados");
+let dados=sheetDados.getDataRange().getValues();
+
+function myFunction() {
+  
+sheetImpressao.clear();
+let row=1;
+dados.map((elem,ind,obj)=>{
+if(ind > 0){
+sheetTemplate.getRange("G9").setValue(elem[0]);
+sheetTemplate.getRange("I9").setValue(elem[1]);
+sheetTemplate.getRange("C9").setValue(elem[2]);
+sheetTemplate.getRange("C10").setValue(elem[3]);
+sheetTemplate.getRange("G10").setValue(elem[4]);
+sheetTemplate.getRange("D15").setValue(elem[5]);
+sheetTemplate.getRange("D14").setValue(elem[6]);
+sheetTemplate.getRange("A1:J31").copyTo(sheetImpressao.getRange(row,1));
+row+=43;
+}
+});
+
+// Emite alerta no nvageador anunciando o final do script
+Browser.msgBox('Aba "Impressão" foi atualizada com os novos dados fornecidos');}
