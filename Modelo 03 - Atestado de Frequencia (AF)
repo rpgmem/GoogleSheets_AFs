@@ -1,0 +1,63 @@
+// Antes de gerar a aba de impressão, exclui todas as linhas em branco, da aba "Dados" (levando em consideração a coluna A)
+
+function deleteRows() {
+  var sheet = SpreadsheetApp.getActiveSheet();
+  var rows = sheet.getDataRange();
+  var numRows = rows.getNumRows();
+  var values = rows.getValues();
+
+  var rowsDeleted = 0;
+  for (var i = 0; i <= numRows - 1; i++) {
+    var row = values[i];
+    if (row[0] == 'delete' || row[0] == '') { // This searches all cells in columns A (change to row[1] for columns B and so on) and deletes row if cell is empty or has value 'delete'.
+      sheet.deleteRow((parseInt(i)+1) - rowsDeleted);
+      rowsDeleted++;
+    }
+  }
+};
+
+// Mapeia os dados "já limpos" (sem linhas em branco) presentes na aba "Dados" para serem corretamente impressos
+
+let app=SpreadsheetApp;
+let spreadsheet=app.getActiveSpreadsheet();
+let sheetImpressao=spreadsheet.getSheetByName("Impressao");
+let sheetTemplate=spreadsheet.getSheetByName("Template");
+let sheetDados=spreadsheet.getSheetByName("Dados");
+let dados=sheetDados.getDataRange().getValues();
+
+function myFunction() {
+  
+sheetImpressao.clear();
+let row=1;
+dados.map((elem,ind,obj)=>{
+if(ind > 0){
+sheetTemplate.getRange("G12").setValue(elem[0]);
+sheetTemplate.getRange("I12").setValue(elem[1]);
+sheetTemplate.getRange("C12").setValue(elem[2]);
+sheetTemplate.getRange("C14").setValue(elem[3]);
+sheetTemplate.getRange("G14").setValue(elem[4]);
+sheetTemplate.getRange("D21").setValue(elem[5]);
+sheetTemplate.getRange("D22").setValue(elem[6]);
+sheetTemplate.getRange("D23").setValue(elem[7]);
+sheetTemplate.getRange("C18").setValue(elem[8]);
+sheetTemplate.getRange("D19").setValue(elem[9]);
+sheetTemplate.getRange("D20").setValue(elem[10]);
+sheetTemplate.getRange("C27").setValue(elem[11]);
+sheetTemplate.getRange("D27").setValue(elem[12]);
+sheetTemplate.getRange("F27").setValue(elem[13]);
+sheetTemplate.getRange("H27").setValue(elem[14]);
+sheetTemplate.getRange("C28").setValue(elem[15]);
+sheetTemplate.getRange("D28").setValue(elem[16]);
+sheetTemplate.getRange("F28").setValue(elem[17]);
+sheetTemplate.getRange("H28").setValue(elem[18]);
+sheetTemplate.getRange("C29").setValue(elem[19]);
+sheetTemplate.getRange("D29").setValue(elem[20]);
+sheetTemplate.getRange("F29").setValue(elem[21]);
+sheetTemplate.getRange("H29").setValue(elem[22]);
+sheetTemplate.getRange("A1:J43").copyTo(sheetImpressao.getRange(row,1));
+row+=44;
+}
+});
+
+// Emite alerta no nvageador anunciando o final do script
+Browser.msgBox('Aba "Impressão" foi atualizada com os novos dados fornecidos');}
